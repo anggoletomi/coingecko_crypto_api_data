@@ -9,9 +9,9 @@ load_dotenv()
 import logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def cg_fetch_market_data(cg_apikey, vs_currency='usd', ids=None, order='market_cap_desc', 
-                         per_page=100, page=1, sparkline=False, price_change_percentage='1h,24h,7d,14d,30d,200d,1y', 
-                         locale='en', precision=None):
+def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market_cap_desc', 
+                           per_page=100, page=1, sparkline=False, price_change_percentage='1h,24h,7d,14d,30d,200d,1y', 
+                           locale='en', precision=None):
     """
     Fetch market data for cryptocurrencies from the CoinGecko API.
 
@@ -62,10 +62,11 @@ def cg_fetch_market_data(cg_apikey, vs_currency='usd', ids=None, order='market_c
         response.raise_for_status()
         data = response.json()
         df = pd.DataFrame(data)
-        df.insert(0, 'data_ts', datetime.now().replace(microsecond=0)) # Add Timestamp
+        df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
+        df.insert(1, 'currency', vs_currency)
 
         # Ensure Columns Exist and Return Cleaned DataFrame
-        required_columns = ['data_ts','id', 'symbol', 'name', 'image', 'current_price', 'market_cap',
+        required_columns = ['data_ts', 'currency', 'id', 'symbol', 'name', 'image', 'current_price', 'market_cap',
                             'market_cap_rank', 'fully_diluted_valuation', 'total_volume',
                             'high_24h', 'low_24h', 'price_change_24h',
                             'price_change_percentage_24h', 'market_cap_change_24h',
@@ -95,8 +96,8 @@ def cg_fetch_market_data(cg_apikey, vs_currency='usd', ids=None, order='market_c
 if __name__ == "__main__":
     
     try:
-        df = cg_fetch_market_data(os.getenv("COINGECKO_API_KEY"))
-        print(f"✅ Successfully fetched market data. Total rows: {len(df)}")
+        df = cg_fetch_coins_markets(os.getenv("COINGECKO_API_KEY"))
+        print(f"✅ Successfully fetched coins market data. Total rows: {len(df)}")
     except Exception as e:
-        logging.error("An error occurred while fetching market data", exc_info=True)
-        print("❌ Failed to fetch market data. Please check the logs for details.")
+        logging.error("An error occurred while fetching coins market data", exc_info=True)
+        print("❌ Failed to fetch coins market data. Please check the logs for details.")

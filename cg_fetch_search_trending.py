@@ -9,7 +9,7 @@ load_dotenv()
 import logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def cg_fetch_trending_search(cg_apikey):
+def cg_fetch_search_trending(cg_apikey):
     """Fetch trending search data from CoinGecko API and return a cleaned DataFrame.
     Documentation: https://docs.coingecko.com/v3.0.1/reference/trending-search
     According to CoinGecko's documentation, this endpoint allows you to query trending search coins, NFTs, and categories on CoinGecko within the last 24 hours.
@@ -69,7 +69,6 @@ def cg_fetch_trending_search(cg_apikey):
         df = df.rename(columns=rename_columns)
 
         # Add Time Stamp
-
         df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
 
         # Ensure Columns Exist and Return Cleaned DataFrame
@@ -97,8 +96,8 @@ def cg_fetch_trending_search(cg_apikey):
 if __name__ == "__main__":
     
     try:
-        df = cg_fetch_trending_search(os.getenv("COINGECKO_API_KEY"))
-        print(f"✅ Successfully fetched trending search data. Total rows: {len(df)}")
+        df = cg_fetch_search_trending(os.getenv("COINGECKO_API_KEY"))
+        print(f"✅ Successfully fetched search trending data. Total rows: {len(df)}")
     except Exception as e:
-        logging.error("An error occurred while fetching trending search data", exc_info=True)
-        print("❌ Failed to fetch trending search data. Please check the logs for details.")
+        logging.error("An error occurred while fetching search trending data", exc_info=True)
+        print("❌ Failed to fetch search trending data. Please check the logs for details.")

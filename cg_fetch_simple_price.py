@@ -24,7 +24,7 @@ def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_ca
         precision (str): Decimal place precision for currency price values. Optional.
 
     Returns:
-        dict: A dictionary containing the requested data.
+    - pd.DataFrame: DataFrame containing simple market data.
 
     Raises:
         Exception: If the API request fails.
@@ -36,13 +36,9 @@ def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_ca
         "include_market_cap": str(include_market_cap).lower(),
         "include_24hr_vol": str(include_24hr_vol).lower(),
         "include_24hr_change": str(include_24hr_change).lower(),
-        "include_last_updated_at": str(include_last_updated_at).lower()
+        "include_last_updated_at": str(include_last_updated_at).lower(),
+        "precision": precision,
     }
-
-    # Add precision if specified
-    if precision:
-        params["precision"] = precision
-
     headers = {
         "accept": "application/json",
         "x-cg-demo-api-key": cg_apikey
@@ -55,10 +51,11 @@ def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_ca
         df = pd.DataFrame.from_dict(data, orient='index').reset_index()
         df.rename(columns={'index': 'coin'}, inplace=True)
         df['last_updated_at'] = pd.to_datetime(df['last_updated_at'], unit='s')
-        df.insert(0, 'data_ts', datetime.now().replace(microsecond=0)) # Add Timestamp
+        df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
+        df.insert(1, 'currency', vs_currencies)
 
         # Ensure Columns Exist and Return Cleaned DataFrame
-        required_columns = ['data_ts', 'coin', 'usd', 'usd_market_cap', 'usd_24h_vol',
+        required_columns = ['data_ts', 'currency', 'coin', 'usd', 'usd_market_cap', 'usd_24h_vol',
                             'usd_24h_change', 'last_updated_at']
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:
@@ -75,11 +72,11 @@ def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_ca
     
 if __name__ == "__main__":
 
-    coin_list = ['bitcoin','ethereum']
+    coin_list = ['bitcoin','ethereum','shiba-inu']
     
     try:
         df = cg_fetch_simple_price(os.getenv("COINGECKO_API_KEY"),ids=",".join(coin_list))
-        print(f"✅ Successfully fetched simple price. Total rows: {len(df)}")
+        print(f"✅ Successfully fetched simple price data. Total rows: {len(df)}")
     except Exception as e:
-        logging.error("An error occurred while fetching simple price", exc_info=True)
-        print("❌ Failed to fetch simple price. Please check the logs for details.")
+        logging.error("An error occurred while fetching simple price data", exc_info=True)
+        print("❌ Failed to fetch simple price data. Please check the logs for details.")
