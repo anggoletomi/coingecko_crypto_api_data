@@ -1,6 +1,7 @@
 import os
 import requests
 import pandas as pd
+from datetime import datetime
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -67,8 +68,12 @@ def cg_fetch_trending_search(cg_apikey):
         }
         df = df.rename(columns=rename_columns)
 
+        # Add Time Stamp
+
+        df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
+
         # Ensure Columns Exist and Return Cleaned DataFrame
-        required_columns = [
+        required_columns = ["data_ts",
             "id", "coin_id", "coin_name", "coin_symbol", "coin_market_cap_rank",
             "coin_img_thumb", "coin_img_small", "coin_img_large", "coin_slug",
             "coin_score", "data_price_usd", "data_price_btc",
@@ -84,10 +89,10 @@ def cg_fetch_trending_search(cg_apikey):
 
     except requests.RequestException as e:
         print(f"API request failed: {e}")
-        raise
+        return pd.DataFrame()
     except Exception as e:
         print(f"An error occurred while processing the data: {e}")
-        raise
+        return pd.DataFrame()
 
 if __name__ == "__main__":
     
