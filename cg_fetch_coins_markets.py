@@ -71,11 +71,11 @@ def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market
                             'price_change_percentage_24h', 'market_cap_change_24h',
                             'market_cap_change_percentage_24h', 'circulating_supply',
                             'total_supply', 'max_supply', 'ath', 'ath_change_percentage',
-                            'ath_date', 'atl', 'atl_change_percentage', 'atl_date', 'roi',
-                            'last_updated', 'price_change_percentage_14d_in_currency',
+                            'ath_date', 'atl', 'atl_change_percentage', 'atl_date', 'roi', 'last_updated',
                             'price_change_percentage_1h_in_currency',
                             'price_change_percentage_24h_in_currency',
                             'price_change_percentage_7d_in_currency',
+                            'price_change_percentage_14d_in_currency',
                             'price_change_percentage_30d_in_currency',
                             'price_change_percentage_200d_in_currency',
                             'price_change_percentage_1y_in_currency']
