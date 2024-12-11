@@ -65,7 +65,6 @@ def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market
         df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
         df.insert(1, 'currency', vs_currency)
 
-        # Ensure Columns Exist and Return Cleaned DataFrame
         required_columns = ['data_ts', 'currency', 'id', 'symbol', 'name', 'image', 'current_price', 'market_cap',
                             'market_cap_rank', 'fully_diluted_valuation', 'total_volume',
                             'high_24h', 'low_24h', 'price_change_24h',

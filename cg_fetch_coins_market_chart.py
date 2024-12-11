@@ -56,7 +56,6 @@ def cg_fetch_coins_market_chart(cg_apikey, id: str,vs_currency: str = "usd",days
         df.insert(1, 'currency', vs_currency)
         df.insert(2, 'id', id)
 
-        # Ensure Columns Exist and Return Cleaned DataFrame
         required_columns = ['data_ts', 'currency', 'id', 'date', 'price', 'market_cap', 'volume']
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:

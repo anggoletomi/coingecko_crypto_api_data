@@ -54,7 +54,6 @@ def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_ca
         df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
         df.insert(1, 'currency', vs_currencies)
 
-        # Ensure Columns Exist and Return Cleaned DataFrame
         required_columns = ['data_ts', 'currency', 'coin', 'usd', 'usd_market_cap', 'usd_24h_vol',
                             'usd_24h_change', 'last_updated_at']
         missing_columns = [col for col in required_columns if col not in df.columns]

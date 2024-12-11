@@ -26,11 +26,8 @@ def cg_fetch_search_trending(cg_apikey):
         return {key: value for key, value in price_changes.items() if key in ['btc', 'usd']}
 
     try:
-        # API Request
         response = requests.get(COINGECKO_TRENDING_URL, headers=HEADERS)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-
-        # Parse Data
+        response.raise_for_status()
         data = response.json()
         trending_coins = data.get("coins", [])
 
@@ -40,7 +37,6 @@ def cg_fetch_search_trending(cg_apikey):
             price_change = item.get("data", {}).get("price_change_percentage_24h", {})
             item["data"]["price_change_percentage_24h"] = filter_price_changes(price_change)
 
-        # Create DataFrame
         raw_df = pd.DataFrame(trending_coins)
         df = pd.json_normalize(raw_df['item'])  # Flatten nested 'item'
 
@@ -67,11 +63,8 @@ def cg_fetch_search_trending(cg_apikey):
             "data.sparkline": "data_sparkline",
         }
         df = df.rename(columns=rename_columns)
-
-        # Add Time Stamp
         df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
 
-        # Ensure Columns Exist and Return Cleaned DataFrame
         required_columns = ["data_ts",
             "id", "coin_id", "coin_name", "coin_symbol", "coin_market_cap_rank",
             "coin_img_thumb", "coin_img_small", "coin_img_large", "coin_slug",
