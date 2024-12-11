@@ -9,7 +9,7 @@ load_dotenv()
 import logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def cg_fetch_coins_market_chart(cg_apikey, id: str,vs_currency: str = "usd",days: str = "30",interval: str = "daily",precision: int = None):
+def cg_fetch_coins_market_chart(cg_apikey, id: str,vs_currency: str = "usd",days: str = "30",interval: str = "daily",precision: str = "6"):
     """
     This function fetches historical chart data for a specific cryptocurrency from the CoinGecko API.
     Access to historical data via the Public API (Demo plan) is restricted to the past 365 days only.
@@ -23,7 +23,7 @@ def cg_fetch_coins_market_chart(cg_apikey, id: str,vs_currency: str = "usd",days
         ~ 2 - 90 days from current time = hourly data
         ~ above 90 days from current time = daily data (00:00 UTC)
 
-    - precision (int): Optional. Decimal places for currency price values
+    - precision (str): Optional. Decimal places for currency price values
 
     Returns:
     - pd.DataFrame: DataFrame containing the historical market chart data.
@@ -60,6 +60,14 @@ def cg_fetch_coins_market_chart(cg_apikey, id: str,vs_currency: str = "usd",days
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
+        
+        # Drop Current Date
+        df = df[df['date'] != df['date'].max()]
+
+        # Clean Data Type
+        df['date'] = df['date'].astype('datetime64[us]')
+        for f in ['price','market_cap','volume']:
+            df[f] = df[f].astype(float)
 
         return df[required_columns]
     
