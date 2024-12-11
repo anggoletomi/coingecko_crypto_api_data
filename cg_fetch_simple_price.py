@@ -10,7 +10,7 @@ import logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_cap=True, include_24hr_vol=True, 
-                          include_24hr_change=True, include_last_updated_at=True,precision=None):
+                          include_24hr_change=True, include_last_updated_at=True,precision="6"):
     """
     Fetches cryptocurrency price data from CoinGecko API using the simple/price endpoint.
 
@@ -54,11 +54,16 @@ def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_ca
         df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
         df.insert(1, 'currency', vs_currencies)
 
-        required_columns = ['data_ts', 'currency', 'coin', 'usd', 'usd_market_cap', 'usd_24h_vol',
-                            'usd_24h_change', 'last_updated_at']
+        required_columns = ['data_ts', 'currency', 'coin', vs_currencies, f'{vs_currencies}_market_cap', f'{vs_currencies}_24h_vol',
+                            f'{vs_currencies}_24h_change', 'last_updated_at']
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
+        
+        # Clean Data Type
+        df['last_updated_at'] = df['last_updated_at'].astype('datetime64[us]')
+        for f in [vs_currencies,f'{vs_currencies}_market_cap',f'{vs_currencies}_24h_vol',f'{vs_currencies}_24h_change']:
+            df[f] = df[f].astype(float)
 
         return df[required_columns]
     

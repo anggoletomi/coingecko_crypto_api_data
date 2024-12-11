@@ -76,6 +76,22 @@ def cg_fetch_search_trending(cg_apikey):
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
+        
+        # Clean Data Type
+
+        float_list = ['data_price_usd','data_price_btc','data_price_change_percentage_24h_btc','data_price_change_percentage_24h_usd',
+                    'data_market_cap_usd','data_market_cap_btc','data_total_volume_usd','data_total_volume_btc']
+
+        int_list = ['coin_id','coin_market_cap_rank','coin_score']
+
+        for f in float_list:
+            try:
+                df[f] = df[f].astype(float)
+            except ValueError:
+                df[f] = df[f].str.replace('$','').str.replace(',','').astype(float)
+
+        for i in int_list:
+            df[i] = df[i].astype('int64')
 
         return df[required_columns]
 

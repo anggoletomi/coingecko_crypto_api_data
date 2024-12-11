@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %
 
 def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market_cap_desc', 
                            per_page=100, page=1, sparkline=False, price_change_percentage='1h,24h,7d,14d,30d,200d,1y', 
-                           locale='en', precision=None):
+                           locale='en', precision="6"):
     """
     Fetch market data for cryptocurrencies from the CoinGecko API.
 
@@ -24,7 +24,7 @@ def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market
     - sparkline (bool): Include sparkline 7-day data. Default: False.
     - price_change_percentage (str): Include price change percentage timeframe. Valid values: '1h', '24h', '7d', '14d', '30d', '200d', '1y'. Comma-separated for multiple timeframes. Default: '1h,24h,7d,14d,30d,200d,1y'.
     - locale (str): Language background. Default: 'en'.
-    - precision (str): Decimal place for currency price value. Default: None.
+    - precision (str): Decimal place for currency price value.
 
     Returns:
     - pd.DataFrame: DataFrame containing market data.
@@ -82,6 +82,27 @@ def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
+        
+        # Clean Data Type
+
+        date_list = ['ath_date','atl_date','last_updated']
+
+        float_list = ['current_price','market_cap','fully_diluted_valuation','total_volume',
+                    'high_24h','low_24h','price_change_24h','price_change_percentage_24h',
+                    'market_cap_change_24h','market_cap_change_percentage_24h','circulating_supply',
+                    'total_supply','max_supply','ath','ath_change_percentage','atl','atl_change_percentage',
+                    'price_change_percentage_14d_in_currency','price_change_percentage_1h_in_currency',
+                    'price_change_percentage_24h_in_currency','price_change_percentage_7d_in_currency',
+                    'price_change_percentage_30d_in_currency','price_change_percentage_200d_in_currency',
+                    'price_change_percentage_1y_in_currency']
+
+        for d in date_list:
+            df[d] = pd.to_datetime(df[d]).dt.tz_localize(None).astype('datetime64[us]')
+
+        for f in float_list:
+            df[f] = df[f].astype(float)
+
+        df['market_cap_rank'] = df['market_cap_rank'].astype('int64')
 
         return df[required_columns]
     
