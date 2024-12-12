@@ -131,10 +131,10 @@ def cg_fetch_coins_market_chart_range(cg_apikey, id: str, from_date: str, to_dat
         return df
     
     except requests.RequestException as e:
-        print(f"API request failed: {e}")
+        print(f"\033[1;31mAPI request failed: {e}\033[0m")
         return pd.DataFrame()
     except Exception as e:
-        print(f"An error occurred while processing the data: {e}")
+        print(f"\033[1;31mAn error occurred while processing the data: {e}\033[0m")
         return pd.DataFrame()
     
 if __name__ == "__main__":
