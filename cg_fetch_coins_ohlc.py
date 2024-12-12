@@ -9,6 +9,10 @@ load_dotenv()
 import logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
+ohlc_day_options = [1, 7, 14, 30, 90, 180, 365]
+# The list above will be used in another script. It represents the allowed options for the 'days' parameter when sending the request.
+# During testing, it was found that not all numbers are accepted for this parameter.
+
 def cg_fetch_coins_ohlc(cg_apikey, id: str, vs_currency: str = "usd", days: str = "90", precision: str = "6"):
     """
     - Get the OHLC chart (Open, High, Low, Close) of a coin based on particular coin id.
@@ -22,7 +26,7 @@ def cg_fetch_coins_ohlc(cg_apikey, id: str, vs_currency: str = "usd", days: str 
     Parameters:
     - id (str): Required. The ID of the coin (e.g., 'bitcoin', 'ethereum'). Only single value is allowed.
     - vs_currency (str): Required. The target currency for market data. Default is 'usd'. Only single value is allowed.
-    - days (str) : Required. data up to number of days ago
+    - days (str) : Required. data up to number of days ago (during testing, only few option of days that allowed, please refer to variable 'ohlc_day_options')
     - precision (str): Optional. Decimal places for currency price values
 
     Returns:
