@@ -113,12 +113,22 @@ def cg_fetch_coins_market_chart_range(cg_apikey, id: str, from_date: str, to_dat
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
         
+        df = df[required_columns]
+        
         # Clean Data Type
         df['date'] = df['date'].astype('datetime64[us]')
         for f in ['price','market_cap','volume']:
             df[f] = df[f].astype(float)
 
-        return df[required_columns]
+        df['id'] = df['id'].str.lower()
+
+        # Rename Column
+        rename_columns = {
+            "id": "coin_id",
+        }
+        df = df.rename(columns=rename_columns)
+
+        return df
     
     except requests.RequestException as e:
         print(f"API request failed: {e}")
@@ -129,8 +139,9 @@ def cg_fetch_coins_market_chart_range(cg_apikey, id: str, from_date: str, to_dat
     
 if __name__ == "__main__":
 
+    last_x_days = 30
     to_date = datetime.now().strftime('%Y-%m-%d')
-    from_date = (pd.to_datetime(to_date) - pd.Timedelta(days=365)).strftime('%Y-%m-%d')
+    from_date = (pd.to_datetime(to_date) - pd.Timedelta(days=last_x_days-1)).strftime('%Y-%m-%d')
 
     try:
         df = cg_fetch_coins_market_chart_range(os.getenv("COINGECKO_API_KEY"),id="bitcoin",from_date=from_date, to_date=to_date)

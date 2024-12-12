@@ -44,45 +44,48 @@ def cg_fetch_search_trending(cg_apikey):
         drop_columns = ["price_btc", "data.content", "data.content.title", "data.content.description"]
         df = df.drop(columns=drop_columns, errors="ignore")
         rename_columns = {
+            "coin_id": "tdg_id",
+            "id": "coin_id",
             "name": "coin_name",
             "symbol": "coin_symbol",
-            "market_cap_rank": "coin_market_cap_rank",
-            "thumb": "coin_img_thumb",
-            "small": "coin_img_small",
-            "large": "coin_img_large",
-            "slug": "coin_slug",
-            "score": "coin_score",
-            "data.price": "data_price_usd",
-            "data.price_btc": "data_price_btc",
-            "data.price_change_percentage_24h.usd": "data_price_change_percentage_24h_usd",
-            "data.price_change_percentage_24h.btc": "data_price_change_percentage_24h_btc",
-            "data.market_cap": "data_market_cap_usd",
-            "data.market_cap_btc": "data_market_cap_btc",
-            "data.total_volume": "data_total_volume_usd",
-            "data.total_volume_btc": "data_total_volume_btc",
-            "data.sparkline": "data_sparkline",
+            "market_cap_rank": "tdg_market_cap_rank",
+            "thumb": "tdg_img_thumb",
+            "small": "tdg_img_small",
+            "large": "tdg_img_large",
+            "slug": "tdg_slug",
+            "score": "tdg_score",
+            "data.price": "tdg_price_usd",
+            "data.price_btc": "tdg_price_btc",
+            "data.price_change_percentage_24h.usd": "tdg_price_change_percentage_24h_usd",
+            "data.price_change_percentage_24h.btc": "tdg_price_change_percentage_24h_btc",
+            "data.market_cap": "tdg_market_cap_usd",
+            "data.market_cap_btc": "tdg_market_cap_btc",
+            "data.total_volume": "tdg_total_volume_usd",
+            "data.total_volume_btc": "tdg_total_volume_btc",
+            "data.sparkline": "tdg_sparkline",
         }
         df = df.rename(columns=rename_columns)
         df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
 
         required_columns = ["data_ts",
-            "id", "coin_id", "coin_name", "coin_symbol", "coin_market_cap_rank",
-            "coin_img_thumb", "coin_img_small", "coin_img_large", "coin_slug",
-            "coin_score", "data_price_usd", "data_price_btc",
-            "data_price_change_percentage_24h_btc", "data_price_change_percentage_24h_usd",
-            "data_market_cap_usd", "data_market_cap_btc", "data_total_volume_usd",
-            "data_total_volume_btc", "data_sparkline"
+            "tdg_id", "coin_id", "coin_name", "coin_symbol", "tdg_market_cap_rank",
+            "tdg_img_thumb", "tdg_img_small", "tdg_img_large", "tdg_slug",
+            "tdg_score", "tdg_price_usd", "tdg_price_btc",
+            "tdg_price_change_percentage_24h_btc", "tdg_price_change_percentage_24h_usd",
+            "tdg_market_cap_usd", "tdg_market_cap_btc", "tdg_total_volume_usd",
+            "tdg_total_volume_btc", "tdg_sparkline"
         ]
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
         
+        df = df[required_columns]
+        
         # Clean Data Type
+        float_list = ['tdg_price_usd','tdg_price_btc','tdg_price_change_percentage_24h_btc','tdg_price_change_percentage_24h_usd',
+                      'tdg_market_cap_usd','tdg_market_cap_btc','tdg_total_volume_usd','tdg_total_volume_btc']
 
-        float_list = ['data_price_usd','data_price_btc','data_price_change_percentage_24h_btc','data_price_change_percentage_24h_usd',
-                    'data_market_cap_usd','data_market_cap_btc','data_total_volume_usd','data_total_volume_btc']
-
-        int_list = ['coin_id','coin_market_cap_rank','coin_score']
+        int_list = ['tdg_id','tdg_market_cap_rank','tdg_score']
 
         for f in float_list:
             try:
@@ -93,7 +96,11 @@ def cg_fetch_search_trending(cg_apikey):
         for i in int_list:
             df[i] = df[i].astype('int64')
 
-        return df[required_columns]
+        df['coin_id'] = df['coin_id'].str.lower()
+        df['coin_symbol'] = df['coin_symbol'].str.upper()
+        df['coin_name'] = df['coin_name'].str.upper()
+
+        return df
 
     except requests.RequestException as e:
         print(f"API request failed: {e}")

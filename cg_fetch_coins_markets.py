@@ -83,6 +83,8 @@ def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
         
+        df = df[required_columns]
+        
         # Clean Data Type
 
         date_list = ['ath_date','atl_date','last_updated']
@@ -104,7 +106,19 @@ def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market
 
         df['market_cap_rank'] = df['market_cap_rank'].astype('int64')
 
-        return df[required_columns]
+        df['id'] = df['id'].str.lower()
+        df['symbol'] = df['symbol'].str.upper()
+        df['name'] = df['name'].str.upper()
+
+        # Rename Column
+        rename_columns = {
+            "id": "coin_id",
+            "symbol": "coin_symbol",
+            "name": "coin_name",
+        }
+        df = df.rename(columns=rename_columns)
+
+        return df
     
     except requests.RequestException as e:
         print(f"API request failed: {e}")

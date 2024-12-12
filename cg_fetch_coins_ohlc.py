@@ -57,12 +57,22 @@ def cg_fetch_coins_ohlc(cg_apikey, id: str, vs_currency: str = "usd", days: str 
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
         
+        df = df[required_columns]
+        
         # Clean Data Type
         df['timestamp'] = df['timestamp'].astype('datetime64[us]')
         for f in ['open', 'high', 'low', 'close']:
             df[f] = df[f].astype(float)
 
-        return df[required_columns]
+        df['id'] = df['id'].str.lower()
+
+        # Rename Column
+        rename_columns = {
+            "id": "coin_id",
+        }
+        df = df.rename(columns=rename_columns)
+        
+        return df
     
     except requests.RequestException as e:
         print(f"API request failed: {e}")

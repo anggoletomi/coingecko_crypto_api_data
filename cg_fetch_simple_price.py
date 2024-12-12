@@ -60,12 +60,22 @@ def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_ca
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
         
+        df = df[required_columns]
+        
         # Clean Data Type
         df['last_updated_at'] = df['last_updated_at'].astype('datetime64[us]')
         for f in [vs_currencies,f'{vs_currencies}_market_cap',f'{vs_currencies}_24h_vol',f'{vs_currencies}_24h_change']:
             df[f] = df[f].astype(float)
 
-        return df[required_columns]
+        df['coin'] = df['coin'].str.lower()
+
+        # Rename Column
+        rename_columns = {
+            "coin": "coin_id",
+        }
+        df = df.rename(columns=rename_columns)
+
+        return df
     
     except requests.RequestException as e:
         print(f"API request failed: {e}")

@@ -61,6 +61,8 @@ def cg_fetch_coins_market_chart(cg_apikey, id: str,vs_currency: str = "usd",days
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
         
+        df = df[required_columns]
+
         # Drop Current Date
         df = df[df['date'] != df['date'].max()]
 
@@ -69,7 +71,15 @@ def cg_fetch_coins_market_chart(cg_apikey, id: str,vs_currency: str = "usd",days
         for f in ['price','market_cap','volume']:
             df[f] = df[f].astype(float)
 
-        return df[required_columns]
+        df['id'] = df['id'].str.lower()
+
+        # Rename Column
+        rename_columns = {
+            "id": "coin_id",
+        }
+        df = df.rename(columns=rename_columns)
+
+        return df
     
     except requests.RequestException as e:
         print(f"API request failed: {e}")
