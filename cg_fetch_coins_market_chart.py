@@ -76,6 +76,11 @@ def cg_fetch_coins_market_chart(cg_apikey, id: str,vs_currency: str = "usd",days
         # Rename Column
         rename_columns = {
             "id": "coin_id",
+            'data_ts': 'mkch_data_ts',
+            'currency': 'mkch_currency',
+            'price': 'mkch_price',
+            'market_cap': 'mkch_market_cap',
+            'volume': 'mkch_volume'
         }
         df = df.rename(columns=rename_columns)
 

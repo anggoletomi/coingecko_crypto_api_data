@@ -114,11 +114,14 @@ def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market
         df['roi'] = df['roi'].apply(lambda x: json.dumps(x) if isinstance(x, dict) else x)
 
         # Rename Column
+        df.columns = [col if col in ['id', 'symbol', 'name'] else f'cmrk_{col}' for col in df.columns]
+
         rename_columns = {
             "id": "coin_id",
             "symbol": "coin_symbol",
             "name": "coin_name",
         }
+        
         df = df.rename(columns=rename_columns)
 
         return df

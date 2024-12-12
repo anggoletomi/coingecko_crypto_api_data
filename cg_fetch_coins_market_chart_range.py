@@ -125,6 +125,11 @@ def cg_fetch_coins_market_chart_range(cg_apikey, id: str, from_date: str, to_dat
         # Rename Column
         rename_columns = {
             "id": "coin_id",
+            'data_ts': 'mrag_data_ts',
+            'currency': 'mrag_currency',
+            'price': 'mrag_price',
+            'market_cap': 'mrag_market_cap',
+            'volume': 'mrag_volume'
         }
         df = df.rename(columns=rename_columns)
 

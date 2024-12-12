@@ -72,7 +72,14 @@ def cg_fetch_coins_ohlc(cg_apikey, id: str, vs_currency: str = "usd", days: str 
 
         # Rename Column
         rename_columns = {
-            "id": "coin_id",
+            'id': 'coin_id',
+            'data_ts': 'ohlc_data_ts',
+            'currency': 'ohlc_currency',
+            'timestamp': 'date',
+            'open': 'ohlc_open',
+            'high': 'ohlc_high',
+            'low': 'ohlc_low',
+            'close': 'ohlc_close'
         }
         df = df.rename(columns=rename_columns)
         

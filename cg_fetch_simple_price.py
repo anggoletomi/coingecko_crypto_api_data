@@ -70,6 +70,8 @@ def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_ca
         df['coin'] = df['coin'].str.lower()
 
         # Rename Column
+        df.columns = [col if col in ['coin'] else f'simp_{col}' for col in df.columns]
+
         rename_columns = {
             "coin": "coin_id",
         }

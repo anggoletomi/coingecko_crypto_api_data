@@ -44,36 +44,36 @@ def cg_fetch_search_trending(cg_apikey):
         drop_columns = ["price_btc", "data.content", "data.content.title", "data.content.description"]
         df = df.drop(columns=drop_columns, errors="ignore")
         rename_columns = {
-            "coin_id": "tdg_id",
+            "coin_id": "trdg_id",
             "id": "coin_id",
             "name": "coin_name",
             "symbol": "coin_symbol",
-            "market_cap_rank": "tdg_market_cap_rank",
-            "thumb": "tdg_img_thumb",
-            "small": "tdg_img_small",
-            "large": "tdg_img_large",
-            "slug": "tdg_slug",
-            "score": "tdg_score",
-            "data.price": "tdg_price_usd",
-            "data.price_btc": "tdg_price_btc",
-            "data.price_change_percentage_24h.usd": "tdg_price_change_percentage_24h_usd",
-            "data.price_change_percentage_24h.btc": "tdg_price_change_percentage_24h_btc",
-            "data.market_cap": "tdg_market_cap_usd",
-            "data.market_cap_btc": "tdg_market_cap_btc",
-            "data.total_volume": "tdg_total_volume_usd",
-            "data.total_volume_btc": "tdg_total_volume_btc",
-            "data.sparkline": "tdg_sparkline",
+            "market_cap_rank": "trdg_market_cap_rank",
+            "thumb": "trdg_img_thumb",
+            "small": "trdg_img_small",
+            "large": "trdg_img_large",
+            "slug": "trdg_slug",
+            "score": "trdg_score",
+            "data.price": "trdg_price_usd",
+            "data.price_btc": "trdg_price_btc",
+            "data.price_change_percentage_24h.usd": "trdg_price_change_percentage_24h_usd",
+            "data.price_change_percentage_24h.btc": "trdg_price_change_percentage_24h_btc",
+            "data.market_cap": "trdg_market_cap_usd",
+            "data.market_cap_btc": "trdg_market_cap_btc",
+            "data.total_volume": "trdg_total_volume_usd",
+            "data.total_volume_btc": "trdg_total_volume_btc",
+            "data.sparkline": "trdg_sparkline",
         }
         df = df.rename(columns=rename_columns)
-        df.insert(0, 'data_ts', datetime.now().replace(microsecond=0))
+        df.insert(0, 'trdg_data_ts', datetime.now().replace(microsecond=0))
 
-        required_columns = ["data_ts",
-            "tdg_id", "coin_id", "coin_name", "coin_symbol", "tdg_market_cap_rank",
-            "tdg_img_thumb", "tdg_img_small", "tdg_img_large", "tdg_slug",
-            "tdg_score", "tdg_price_usd", "tdg_price_btc",
-            "tdg_price_change_percentage_24h_btc", "tdg_price_change_percentage_24h_usd",
-            "tdg_market_cap_usd", "tdg_market_cap_btc", "tdg_total_volume_usd",
-            "tdg_total_volume_btc", "tdg_sparkline"
+        required_columns = ["trdg_data_ts",
+            "trdg_id", "coin_id", "coin_name", "coin_symbol", "trdg_market_cap_rank",
+            "trdg_img_thumb", "trdg_img_small", "trdg_img_large", "trdg_slug",
+            "trdg_score", "trdg_price_usd", "trdg_price_btc",
+            "trdg_price_change_percentage_24h_btc", "trdg_price_change_percentage_24h_usd",
+            "trdg_market_cap_usd", "trdg_market_cap_btc", "trdg_total_volume_usd",
+            "trdg_total_volume_btc", "trdg_sparkline"
         ]
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:
@@ -82,10 +82,10 @@ def cg_fetch_search_trending(cg_apikey):
         df = df[required_columns]
         
         # Clean Data Type
-        float_list = ['tdg_price_usd','tdg_price_btc','tdg_price_change_percentage_24h_btc','tdg_price_change_percentage_24h_usd',
-                      'tdg_market_cap_usd','tdg_market_cap_btc','tdg_total_volume_usd','tdg_total_volume_btc']
+        float_list = ['trdg_price_usd','trdg_price_btc','trdg_price_change_percentage_24h_btc','trdg_price_change_percentage_24h_usd',
+                      'trdg_market_cap_usd','trdg_market_cap_btc','trdg_total_volume_usd','trdg_total_volume_btc']
 
-        int_list = ['tdg_id','tdg_market_cap_rank','tdg_score']
+        int_list = ['trdg_id','trdg_market_cap_rank','trdg_score']
 
         for f in float_list:
             try:

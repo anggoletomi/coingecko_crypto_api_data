@@ -70,8 +70,7 @@ def cg_data_a_merge_init(cg_apikey,currency = 'usd',decimal_precision = '6',last
     df_trending = cg_fetch_search_trending(cg_apikey)
     trending_ids = df_trending['coin_id'].unique().tolist() #Get unique coin IDs
 
-    df_trending = df_trending.drop(columns=['coin_symbol', 'coin_name']) #Handle for later merging
-    df_trending = df_trending.rename(columns={'data_ts': 'tg_data_ts'}) #Handle for later merging
+    df_trending_drop = df_trending.drop(columns=['coin_symbol', 'coin_name']) #Handle for later merging
 
     not_exist_trending_ids = [id for id in trending_ids if id not in market_ids] # Find coin IDs that do not exist in df_markets
 
@@ -94,22 +93,8 @@ def cg_data_a_merge_init(cg_apikey,currency = 'usd',decimal_precision = '6',last
     # 4. COINS OHLC
     df_ohlc = fetch_loop('ohlc',coin_list)
 
-    df_ohlc = df_ohlc.rename(columns={'data_ts': 'ohlc_data_ts',
-                                    'currency': 'ohlc_currency',
-                                    'timestamp': 'date',
-                                    'open': 'ohlc_open',
-                                    'high': 'ohlc_high',
-                                    'low': 'ohlc_low',
-                                    'close': 'ohlc_close'}) #Handle for later merging
-
     # 5. COINS MARKET CHART
     df_market_chart = fetch_loop('market_chart',coin_list)
-
-    df_market_chart = df_market_chart.rename(columns={'data_ts': 'mc_data_ts',
-                                                    'currency': 'mc_currency',
-                                                    'price': 'mc_price',
-                                                    'market_cap': 'mc_market_cap',
-                                                    'volume': 'mc_volume'}) #Handle for later merging
 
     # # 6. COINS MARKET CHART RANGE
     # df_market_chart_range = fetch_loop('market_chart_range',coin_list)
@@ -118,7 +103,7 @@ def cg_data_a_merge_init(cg_apikey,currency = 'usd',decimal_precision = '6',last
     # # Therefore, we will comment it out for now, as we will conduct our analysis using `cg_fetch_coins_market_chart`.
 
     # *** Merge Market & Trending Data ***
-    df_merge = pd.merge(df_market_all,df_trending,on='coin_id',how='left',indicator=True)
+    df_merge = pd.merge(df_market_all,df_trending_drop,on='coin_id',how='left',indicator=True)
     df_merge = df_merge.rename(columns={'_merge': 'merge_status_1'})
     df_merge['trending_flag'] = np.where(df_merge['merge_status_1'] == 'both',1,0)
 
@@ -131,7 +116,13 @@ def cg_data_a_merge_init(cg_apikey,currency = 'usd',decimal_precision = '6',last
     df_final = df_final.rename(columns={'_merge': 'merge_status_3'})
 
     # Load to BigQuery
-    write_table_by_unique_id(df_final, 'demo_data.coingecko_market_historical_data', 'replace', ['coin_id'], date_col_ref='date')
+    write_table_by_unique_id(df_markets, 'cryptocurrency.cgc_coins_markets', 'replace', ['coin_id'], date_col_ref='date')
+    write_table_by_unique_id(df_trending, 'cryptocurrency.cgc_search_trending', 'replace', ['coin_id'], date_col_ref='date')
+    write_table_by_unique_id(df_ohlc, 'cryptocurrency.cgc_coins_ohlc', 'replace', ['coin_id'], date_col_ref='date')
+    write_table_by_unique_id(df_market_chart, 'cryptocurrency.cgc_coins_market_chart', 'replace', ['coin_id'], date_col_ref='date')
+
+    write_table_by_unique_id(df_final, 'cryptocurrency.cgc_a_market_historical_data', 'replace', ['coin_id'], date_col_ref='date')
+
     get_local_time()
 
 if __name__ == "__main__":
