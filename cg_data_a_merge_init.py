@@ -7,12 +7,12 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from cg_fetch_coins_market_chart_range import cg_fetch_coins_market_chart_range
-from cg_fetch_coins_market_chart import cg_fetch_coins_market_chart
-from cg_fetch_coins_markets import cg_fetch_coins_markets
-from cg_fetch_coins_ohlc import cg_fetch_coins_ohlc, ohlc_day_options
-from cg_fetch_search_trending import cg_fetch_search_trending
-from cg_fetch_simple_price import cg_fetch_simple_price
+from fetch_data.cg_fetch_coins_market_chart_range import cg_fetch_coins_market_chart_range
+from fetch_data.cg_fetch_coins_market_chart import cg_fetch_coins_market_chart
+from fetch_data.cg_fetch_coins_markets import cg_fetch_coins_markets
+from fetch_data.cg_fetch_coins_ohlc import cg_fetch_coins_ohlc, ohlc_day_options
+from fetch_data.cg_fetch_search_trending import cg_fetch_search_trending
+from fetch_data.cg_fetch_simple_price import cg_fetch_simple_price
 
 from bi_function import write_table_by_unique_id, get_local_time, log_function
 
