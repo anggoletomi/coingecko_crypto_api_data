@@ -61,6 +61,9 @@ def cg_fetch_simple_price(cg_apikey, ids, vs_currencies='usd', include_market_ca
             raise ValueError(f"Missing required columns: {missing_columns}")
         
         df = df[required_columns]
+
+        # Normalize Percentage Data
+        df[f'{vs_currencies}_24h_change'] = df[f'{vs_currencies}_24h_change']/100
         
         # Clean Data Type
         df['last_updated_at'] = df['last_updated_at'].astype('datetime64[us]')

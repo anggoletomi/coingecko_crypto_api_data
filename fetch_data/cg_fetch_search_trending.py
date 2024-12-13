@@ -80,6 +80,10 @@ def cg_fetch_search_trending(cg_apikey):
             raise ValueError(f"Missing required columns: {missing_columns}")
         
         df = df[required_columns]
+
+        # Normalize Percentage Data
+        for p in ['trdg_price_change_percentage_24h_btc', 'trdg_price_change_percentage_24h_usd']:
+            df[p] = df[p]/100
         
         # Clean Data Type
         float_list = ['trdg_price_usd','trdg_price_btc','trdg_price_change_percentage_24h_btc','trdg_price_change_percentage_24h_usd',

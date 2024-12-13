@@ -85,9 +85,23 @@ def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market
             raise ValueError(f"Missing required columns: {missing_columns}")
         
         df = df[required_columns]
+
+        # Normalize Percentage Data
+        for p in ['cmrk_price_change_24h',
+                    'cmrk_price_change_percentage_24h',
+                    'cmrk_market_cap_change_24h',
+                    'cmrk_market_cap_change_percentage_24h',
+                    'cmrk_ath_change_percentage',
+                    'cmrk_price_change_percentage_1h_in_currency',
+                    'cmrk_price_change_percentage_24h_in_currency',
+                    'cmrk_price_change_percentage_7d_in_currency',
+                    'cmrk_price_change_percentage_14d_in_currency',
+                    'cmrk_price_change_percentage_30d_in_currency',
+                    'cmrk_price_change_percentage_200d_in_currency',
+                    'cmrk_price_change_percentage_1y_in_currency']:
+            df[p] = df[p]/100
         
         # Clean Data Type
-
         date_list = ['ath_date','atl_date','last_updated']
 
         float_list = ['current_price','market_cap','fully_diluted_valuation','total_volume',
