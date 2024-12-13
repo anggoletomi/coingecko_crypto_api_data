@@ -87,18 +87,18 @@ def cg_fetch_coins_markets(cg_apikey, vs_currency='usd', ids=None, order='market
         df = df[required_columns]
 
         # Normalize Percentage Data
-        for p in ['cmrk_price_change_24h',
-                    'cmrk_price_change_percentage_24h',
-                    'cmrk_market_cap_change_24h',
-                    'cmrk_market_cap_change_percentage_24h',
-                    'cmrk_ath_change_percentage',
-                    'cmrk_price_change_percentage_1h_in_currency',
-                    'cmrk_price_change_percentage_24h_in_currency',
-                    'cmrk_price_change_percentage_7d_in_currency',
-                    'cmrk_price_change_percentage_14d_in_currency',
-                    'cmrk_price_change_percentage_30d_in_currency',
-                    'cmrk_price_change_percentage_200d_in_currency',
-                    'cmrk_price_change_percentage_1y_in_currency']:
+        for p in ['price_change_24h',
+                    'price_change_percentage_24h',
+                    'market_cap_change_24h',
+                    'market_cap_change_percentage_24h',
+                    'ath_change_percentage',
+                    'price_change_percentage_1h_in_currency',
+                    'price_change_percentage_24h_in_currency',
+                    'price_change_percentage_7d_in_currency',
+                    'price_change_percentage_14d_in_currency',
+                    'price_change_percentage_30d_in_currency',
+                    'price_change_percentage_200d_in_currency',
+                    'price_change_percentage_1y_in_currency']:
             df[p] = df[p]/100
         
         # Clean Data Type
