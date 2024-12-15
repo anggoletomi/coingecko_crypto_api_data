@@ -25,9 +25,4 @@ Below is an explanation of the key files and folders in this repository:
 
 ### Analysis
 - **`cg_data_b_analysis.ipynb`**:  
-  A Jupyter Notebook for analyzing the processed data.  
-  **Key Notes**:
-  - This notebook uses a **static snapshot table** for analysis, ensuring consistency in observations.  
-    - The static table represents a snapshot of the rolling data for the past 365 days at the time of analysis.  
-    - The original table is dynamic and updates every time the data-fetching scripts run.
-  - If you choose to re-run the notebook with updated data, the key observations in the notebook may not match the graphs or tables due to differences in the time period of the data.
+  A Jupyter Notebook for analyzing the processed data. To maintain consistency in observations, this notebook uses a static table by filtering the data period.

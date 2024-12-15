@@ -118,10 +118,10 @@ def cg_data_a_merge_init(cg_apikey,currency = 'usd',decimal_precision = '6',last
     # Load to BigQuery
     write_table_by_unique_id(df_markets, 'cryptocurrency.cgc_coins_markets', 'replace', ['coin_id'], date_col_ref='date')
     write_table_by_unique_id(df_trending, 'cryptocurrency.cgc_search_trending', 'replace', ['coin_id'], date_col_ref='date')
-    write_table_by_unique_id(df_ohlc, 'cryptocurrency.cgc_coins_ohlc', 'replace', ['coin_id'], date_col_ref='date')
-    write_table_by_unique_id(df_market_chart, 'cryptocurrency.cgc_coins_market_chart', 'replace', ['coin_id'], date_col_ref='date')
+    write_table_by_unique_id(df_ohlc, 'cryptocurrency.cgc_coins_ohlc', 'append', ['coin_id'], date_col_ref='date')
+    write_table_by_unique_id(df_market_chart, 'cryptocurrency.cgc_coins_market_chart', 'append', ['coin_id'], date_col_ref='date')
 
-    write_table_by_unique_id(df_final, 'cryptocurrency.cgc_a_market_historical_data', 'replace', ['coin_id'], date_col_ref='date')
+    write_table_by_unique_id(df_final, 'cryptocurrency.cgc_a_market_historical_data', 'append', ['coin_id'], date_col_ref='date')
 
     get_local_time()
 
