@@ -23,6 +23,12 @@ Below is an explanation of the key files and folders in this repository:
 - **`cg_data_a_merge_init.py`**:  
   The script to initialize data fetching and merge the results into a single table.
 
+- **`cg_data_c_processed.py`**:  
+  The script processes data and loads it to Google Sheets, as Tableau Public (Free Version) did not yet support database connections at the time this project was created
+
+- **`main.py`**: 
+  The entry point to run everything together
+
 ### Analysis
 - **`cg_data_b_analysis.ipynb`**:  
   A Jupyter Notebook for analyzing the processed data. To maintain consistency in observations, this notebook uses a static table by filtering the data period.
