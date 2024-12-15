@@ -58,7 +58,7 @@ def cg_data_c_processed():
 
     # Write to BigQuery & Google Sheets
 
-    write_table_by_unique_id(df, 'cryptocurrency.cgc_a_market_historical_processed', 'append', ['coin_id'], date_col_ref='date')
+    write_table_by_unique_id(df, 'cryptocurrency.cgc_a_market_historical_processed', 'replace', ['coin_id'], date_col_ref='date')
 
     df['date'] = df['date'].dt.date
     df['data_ts'] = df['data_ts'].dt.tz_localize(None)
