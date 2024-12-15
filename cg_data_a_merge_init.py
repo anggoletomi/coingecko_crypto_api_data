@@ -125,6 +125,8 @@ def cg_data_a_merge_init(cg_apikey,currency = 'usd',decimal_precision = '6',last
 
     get_local_time()
 
+    time.sleep(5)
+
 if __name__ == "__main__":
 
     tasks = [
