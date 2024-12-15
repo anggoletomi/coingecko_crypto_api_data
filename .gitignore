@@ -140,3 +140,6 @@ docker-compose.dev.yml
 # Docker (optional)
 .dockerignore
 Dockerfile.*
+
+# Tableau Recovery File
+*.twbr
