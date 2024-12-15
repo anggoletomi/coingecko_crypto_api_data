@@ -16,6 +16,9 @@ Below is an explanation of the key files and folders in this repository:
 ### Scripts and Folders
 - **`fetch_data/`**:  
   Contains scripts for fetching data from the CoinGecko API using various endpoints.
+
+- **`tableau/`**:  
+  Contains a .twb Tableau Workbook file used for the dashboard
   
 - **`bi_function.py`**:  
   A collection of utility functions used across the project.
