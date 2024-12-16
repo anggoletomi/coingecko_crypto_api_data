@@ -42,7 +42,12 @@ def cg_data_c_processed():
     df['circulation_percentage'] = (df['cmrk_circulating_supply'] / df['cmrk_total_supply'])
     df['price_change_classification'] = df['cmrk_price_change_percentage_24h_in_currency'].apply(lambda x: 'Bullish' if x > 0 else 'Bearish')
     df['liquidity_score'] = df['cmrk_total_volume'] / df['cmrk_market_cap']
-    df['performance_trend_1y'] = df['cmrk_price_change_percentage_1y_in_currency'].apply(lambda x: 'High Growth' if x > 100 else 'Moderate' if 0 <= x <= 100 else 'Decline')
+    df['performance_trend_1y'] = df['cmrk_price_change_percentage_1y_in_currency'].apply(
+                                                                                        lambda x: 'High Growth' if x > 100 
+                                                                                        else 'Moderate' if 0 <= x <= 100 
+                                                                                        else 'Decline' if x < 0 
+                                                                                        else '-'
+                                                                                    )
 
     # 4. Handle Infinity Value
 
