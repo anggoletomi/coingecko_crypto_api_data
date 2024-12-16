@@ -41,15 +41,9 @@ def cg_data_c_processed():
     df['market_dominance'] = (df['cmrk_market_cap'] / df['cmrk_market_cap'].sum())
     df['circulation_percentage'] = (df['cmrk_circulating_supply'] / df['cmrk_total_supply'])
     df['price_vs_ath'] = ((df['cmrk_current_price'] - df['cmrk_ath']) / df['cmrk_ath'])
-    df['volatility_7d'] = abs(df['cmrk_price_change_percentage_7d_in_currency'])
+    df['price_vs_atl'] = ((df['cmrk_current_price'] - df['cmrk_atl']) / df['cmrk_atl'])
     df['price_change_classification'] = df['cmrk_price_change_percentage_24h_in_currency'].apply(lambda x: 'Bullish' if x > 0 else 'Bearish')
     df['liquidity_score'] = df['cmrk_total_volume'] / df['cmrk_market_cap']
-    df['growth_potential'] = abs(df['cmrk_ath_change_percentage'])
-    df['risk_reward_ratio'] = abs(df['cmrk_price_change_percentage_7d_in_currency'] / df['cmrk_price_change_percentage_24h_in_currency'])
-    df['market_cap_to_supply_ratio'] = df['cmrk_market_cap'] / df['cmrk_circulating_supply']
-    df['daily_price_range'] = df['cmrk_high_24h'] - df['cmrk_low_24h']
-    df['stability_index'] = df['daily_price_range'] / df['cmrk_current_price']
-    df['circulation_health'] = df['circulation_percentage'].apply(lambda x: 'Healthy' if x >= 75 else 'Unhealthy')
     df['performance_trend_1y'] = df['cmrk_price_change_percentage_1y_in_currency'].apply(lambda x: 'High Growth' if x > 100 else 'Moderate' if 0 <= x <= 100 else 'Decline')
 
     # 4. Handle Infinity Value
@@ -57,11 +51,9 @@ def cg_data_c_processed():
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
 
     # Write to BigQuery
-
     write_table_by_unique_id(df, 'cryptocurrency.cgc_a_market_historical_processed', 'replace', ['coin_id'], date_col_ref='date')
 
     # Write to Google Sheets
-
     # Formatting Date
     for f in ['date','cmrk_ath_date','cmrk_atl_date','cmrk_last_updated']:
         df[f] = df[f].dt.date
