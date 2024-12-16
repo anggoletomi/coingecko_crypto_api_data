@@ -56,11 +56,16 @@ def cg_data_c_processed():
 
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
 
-    # Write to BigQuery & Google Sheets
+    # Write to BigQuery
 
     write_table_by_unique_id(df, 'cryptocurrency.cgc_a_market_historical_processed', 'replace', ['coin_id'], date_col_ref='date')
 
-    df['date'] = df['date'].dt.date
+    # Write to Google Sheets
+
+    # Formatting Date
+    for f in ['date','cmrk_ath_date','cmrk_atl_date','cmrk_last_updated']:
+        df[f] = df[f].dt.date
+    
     df['data_ts'] = df['data_ts'].dt.tz_localize(None)
 
     write_to_gsheet(df, spreadsheet_id='1bvZPl_vHrGyoGHw9q8TJ23MHuUdPuVHhAf6rDSS3U9s',
