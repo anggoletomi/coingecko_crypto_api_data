@@ -40,8 +40,6 @@ def cg_data_c_processed():
 
     df['market_dominance'] = (df['cmrk_market_cap'] / df['cmrk_market_cap'].sum())
     df['circulation_percentage'] = (df['cmrk_circulating_supply'] / df['cmrk_total_supply'])
-    df['price_vs_ath'] = ((df['cmrk_current_price'] - df['cmrk_ath']) / df['cmrk_ath'])
-    df['price_vs_atl'] = ((df['cmrk_current_price'] - df['cmrk_atl']) / df['cmrk_atl'])
     df['price_change_classification'] = df['cmrk_price_change_percentage_24h_in_currency'].apply(lambda x: 'Bullish' if x > 0 else 'Bearish')
     df['liquidity_score'] = df['cmrk_total_volume'] / df['cmrk_market_cap']
     df['performance_trend_1y'] = df['cmrk_price_change_percentage_1y_in_currency'].apply(lambda x: 'High Growth' if x > 100 else 'Moderate' if 0 <= x <= 100 else 'Decline')
